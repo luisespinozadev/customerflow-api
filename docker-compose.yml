@@ -1,0 +1,16 @@
+services:
+  oracle-db:
+    image: container-registry.oracle.com/database/free:23.7.0.0-lite-amd64
+    container_name: customerflow-db
+    ports:
+      - "${DB_PORT:-1521}:1521"
+    environment:
+      ORACLE_PWD: "${DB_PASSWORD:-changeme}"
+      ORACLE_CHARACTERSET: "${DB_CHARACTERSET:-AL32UTF8}"
+      ORACLE_PDB: "${DB_PDB:-customerflowpdb}"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ./setup-sql:/opt/oracle/scripts/startup
+
+volumes:
+  oracle-data:
