@@ -153,19 +153,20 @@ docker compose -f docker-compose-testing.yml up -d
 
 ## Environment variables
 
-| Variable           | Description                                                             | Required | Default value | Example / Possible Values                             |
-|--------------------|-------------------------------------------------------------------------|----------|---------------|-------------------------------------------------------|
-| DB_HOST            | Oracle Database Host                                                    | Yes      | -             | `localhost`                                           |
-| DB_PORT            | Oracle Database Port                                                    | Yes      | -             | `1521`                                                |
-| DB_PDB             | Oracle Pluggable Database name                                          | Yes      | -             | `customerflowpdb`                                     |
-| DB_USERNAME        | Oracle Database Username                                                | Yes      | -             | `CUSTOMERFLOW_DEV`                                    |
-| DB_PASSWORD        | Oracle Database Password                                                | Yes      | -             | `changeme`                                            |
-| JWT_SECRET_KEY     | JWT Secret Key. Generate using `JwtSecretKeyMakerTest` class            | Yes      | -             | `B9KcRasDYfFpDKYavK70qUYukxKGJXLfTXaGrQuoGdc`         |
-| JWT_EXPIRATION     | JWT expiration in milliseconds.                                         | Yes      | -             | `86400000`                                            |
-| JPA_DDL_AUTO       | Controls how Hibernate handles database schema generation and updates.  | No | `none`        | `none`, `update`, `create`, `create-drop`, `validate` | 
-| JPA_SHOW_SQL       | Enable Hibernate to display generated SQL queries in the console.       | No | `false`       | `true`, `false`                                       | 
-| JPA_FORMAT_SQL     | Formats SQL queries in logs for better readability.                     | No | `false` | `true`, `false`                                       |
-| API_DOCS_ENABLED   | Enables API documentation generation.                                   | No | `false` | `true`, `false`                                       |
-| SWAGGER_UI_ENABLED | Enables Swagger UI for API visualization.                               | No | `false` | `true`, `false`                                       | 
-| INITIAL_ADMIN_EMAIL | Email for the initial admin user, created when no users exist at startup. | No | - | `admin@admin.com`                                     | 
-| INITIAL_ADMIN_PASSWORD | Password for the initial admin user, created when no users exist at startup. | No | - | `changeme`                                            |
+| Variable               | Description                                                                  | Required | Default value | Example / Possible Values                                      |
+|------------------------|------------------------------------------------------------------------------|----------|---------------|----------------------------------------------------------------|
+| API_URL                | API url                                                                     | Yes      | -             | `http://localhost:8080`, `https://customerflow-api.domain.com` |
+| DB_HOST                | Oracle Database Host                                                         | Yes      | -             | `localhost`                                                    |
+| DB_PORT                | Oracle Database Port                                                         | Yes      | -             | `1521`                                                         |
+| DB_PDB                 | Oracle Pluggable Database name                                               | Yes      | -             | `customerflowpdb`                                              |
+| DB_USERNAME            | Oracle Database Username                                                     | Yes      | -             | `CUSTOMERFLOW_DEV`                                             |
+| DB_PASSWORD            | Oracle Database Password                                                     | Yes      | -             | `changeme`                                                     |
+| JWT_SECRET_KEY         | JWT Secret Key. Generate using `JwtSecretKeyMakerTest` class                 | Yes      | -             | `B9KcRasDYfFpDKYavK70qUYukxKGJXLfTXaGrQuoGdc`                  |
+| JWT_EXPIRATION         | JWT expiration in milliseconds.                                              | Yes      | -             | `86400000`                                                     |
+| JPA_DDL_AUTO           | Controls how Hibernate handles database schema generation and updates.       | No | `none`        | `none`, `update`, `create`, `create-drop`, `validate`          | 
+| JPA_SHOW_SQL           | Enable Hibernate to display generated SQL queries in the console.            | No | `false`       | `true`, `false`                                                | 
+| JPA_FORMAT_SQL         | Formats SQL queries in logs for better readability.                          | No | `false` | `true`, `false`                                                |
+| API_DOCS_ENABLED       | Enables API documentation generation.                                        | No | `false` | `true`, `false`                                                |
+| SWAGGER_UI_ENABLED     | Enables Swagger UI for API visualization.                                    | No | `false` | `true`, `false`                                                | 
+| INITIAL_ADMIN_EMAIL    | Email for the initial admin user, created when no users exist at startup.    | No | - | `admin@admin.com`                                              | 
+| INITIAL_ADMIN_PASSWORD | Password for the initial admin user, created when no users exist at startup. | No | - | `changeme`                                                     |

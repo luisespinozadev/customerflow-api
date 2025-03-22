@@ -1,3 +1,6 @@
+# Server
+API_URL=http://localhost:8080
+
 # Database setup
 DB_HOST=localhost
 DB_PORT=1521

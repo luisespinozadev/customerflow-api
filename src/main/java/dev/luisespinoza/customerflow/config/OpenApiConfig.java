@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -20,7 +21,12 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
                 title = "OpenApi specification - CustomerFlow API",
                 version = "1.0"
         ),
-
+        servers = {
+                @Server(
+                        description = "Server URL",
+                        url = "${api.url}"
+                )
+        },
         security = {
                 @SecurityRequirement(
                         name = "bearerAuth"
