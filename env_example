@@ -1,0 +1,23 @@
+# Database setup
+DB_HOST=localhost
+DB_PORT=1521
+DB_PDB=customerflowpdb
+DB_USERNAME=CUSTOMERFLOW_DEV
+DB_PASSWORD=changeme
+
+# Security
+JWT_SECRET_KEY=
+JWT_EXPIRATION=86400000 # a day
+
+# JPA setup (optional)
+JPA_DDL_AUTO=create-drop
+JPA_SHOW_SQL=true
+JPA_FORMAT_SQL=true
+
+# Swagger setup (optional)
+SPRINGDOC_API_DOCS_ENABLED=true
+SPRINGDOC_SWAGGER_UI_ENABLED=true
+
+# Initial admin credentials (optional)
+INITIAL_ADMIN_EMAIL=admin
+INITIAL_ADMIN_PASSWORD=changeme

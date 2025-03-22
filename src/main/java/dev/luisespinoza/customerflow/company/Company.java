@@ -20,7 +20,6 @@ import java.util.UUID;
 public class Company {
 
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.RANDOM)
-    private UUID id;
+    private Long id;
     private String name;
 }

@@ -112,7 +112,19 @@ DealStage "1" --* "many" Deal : assigned to
     ```zsh
     docker compose up -d
     ```
-2. Start app from IDE:
+2. Generate `.env` file with environment variables by copying `env_example`
+    ```zsh
+    cp env_example .env
+    ```
+3. Setup environment variables
+   - Alternative 1 - Via IDE: For example, in IntelliJ IDEA, go to `Run > Edit Configurations`, and select the `.env` file to load environment variables automatically.
+   - Alternative 2 - Via Terminal (manually):
+       ```zsh
+       set -a  # Enable automatic export
+       source .env
+       set +a  # Disable automatic export
+       ```
+4. Start app from IDE:
     ```zsh
     mvn spring-boot:run
     ```
