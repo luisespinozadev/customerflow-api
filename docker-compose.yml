@@ -1,6 +1,6 @@
 services:
   oracle-db:
-    image: container-registry.oracle.com/database/free:23.7.0.0-lite-amd64
+    image: container-registry.oracle.com/database/free:23.7.0.0-lite-${ARCH:-amd64}
     container_name: customerflow-db
     ports:
       - "${DB_PORT:-1521}:1521"
