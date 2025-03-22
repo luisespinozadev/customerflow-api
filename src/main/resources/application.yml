@@ -30,8 +30,6 @@ springdoc:
     enabled: ${API_DOCS_ENABLED:false}
   swagger-ui:
     enabled: ${SWAGGER_UI_ENABLED:false}
-  server:
-    url: "https://demo-customerflow-api.luisespinoza.dev"
 
 initial-setup:
   admin:
