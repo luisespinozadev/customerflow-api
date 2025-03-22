@@ -20,11 +20,20 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: prod
       JAVA_OPTS: "-Xms512m -Xmx1024m"
-      DB_HOST: "${DB_HOST:-oracle-db}"
-      DB_PORT: "${DB_PORT:-1521}"
-      DB_PDB: "${DB_PDB:-customerflowpdb}"
-      DB_USERNAME: "${DB_USERNAME:-CUSTOMERFLOW_DEV}"
-      DB_PASSWORD: "${DB_PASSWORD:-changeme}"
+      DB_HOST: oracle-db
+      DB_PORT: "${DB_PORT}"
+      DB_PDB: "${DB_PDB}"
+      DB_USERNAME: "${DB_USERNAME}"
+      DB_PASSWORD: "${DB_PASSWORD}"
+      JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
+      JWT_EXPIRATION: "${JWT_EXPIRATION}"
+      JPA_DDL_AUTO: "${JPA_DDL_AUTO:-}"
+      JPA_SHOW_SQL: "${JPA_SHOW_SQL:-}"
+      JPA_FORMAT_SQL: "${JPA_FORMAT_SQL:-}"
+      API_DOCS_ENABLED: "${API_DOCS_ENABLED:-}"
+      SWAGGER_UI_ENABLED: "${SWAGGER_UI_ENABLED:-}"
+      INITIAL_ADMIN_EMAIL: "${INITIAL_ADMIN_EMAIL:-}"
+      INITIAL_ADMIN_PASSWORD: "${INITIAL_ADMIN_PASSWORD:-}"
     restart: always
     depends_on:
       oracle-db:

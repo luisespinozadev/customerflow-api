@@ -15,8 +15,8 @@ JPA_SHOW_SQL=true
 JPA_FORMAT_SQL=true
 
 # Swagger setup (optional)
-SPRINGDOC_API_DOCS_ENABLED=true
-SPRINGDOC_SWAGGER_UI_ENABLED=true
+API_DOCS_ENABLED=true
+SWAGGER_UI_ENABLED=true
 
 # Initial admin credentials (optional)
 INITIAL_ADMIN_EMAIL=admin

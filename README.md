@@ -106,32 +106,66 @@ DealStage "1" --* "many" Deal : assigned to
 - Database: 
   - Oracle Database Free
 
-## Running in Development Environment
+## Setup (Initial Configuration)
 
-1. Run Oracle DB server
+Before running the application, follow these steps:
+
+1. **Generate the environment variables file**
+    ```zsh
+   # Linux/macOS
+    cp env_example .env
+   
+   # Windows (PowerShell)
+   Copy-Item env_example -Destination .env
+    ```
+   
+2. **Generate and assign the JWT key**
+   - Use the `JwtSecretKeyMakerTest` class to generate the key.
+   - Add the key to the `.env`  file under the `JWT_SECRET_KEY` variable.
+
+## Running the Application
+
+### Development Environment
+
+1. Start the Oracle database:
     ```zsh
     docker compose up -d
     ```
-2. Generate `.env` file with environment variables by copying `env_example`
-    ```zsh
-    cp env_example .env
-    ```
-3. Setup environment variables
-   - Alternative 1 - Via IDE: For example, in IntelliJ IDEA, go to `Run > Edit Configurations`, and select the `.env` file to load environment variables automatically.
-   - Alternative 2 - Via Terminal (manually):
+2. Set up environment variables
+   - Option 1 (IDE - recommended): In IntelliJ IDEA, go to `Run > Edit Configurations`, and select the `.env` to automatically load the environment variables.
+   - Option 2 (Terminal - Manual):
        ```zsh
-       set -a  # Enable automatic export
+       set -a
        source .env
-       set +a  # Disable automatic export
+       set +a
        ```
-4. Start app from IDE:
+5. Run the application from the IDE or terminal:
     ```zsh
     mvn spring-boot:run
     ```
 
-## Running in Testing Environment
+### Testing Environment
 
-The following command will buill an image and run a container of the API with the database server.
+Start the API along with the database (automatically loads the `.env` file):
 ```zsh
 docker compose -f docker-compose-testing.yml up -d  
 ```
+
+## Environment variables
+
+| Variable           | Description                                                             | Required | Default value | Example / Possible Values                             |
+|--------------------|-------------------------------------------------------------------------|----------|---------------|-------------------------------------------------------|
+| DB_HOST            | Oracle Database Host                                                    | Yes      | -             | `localhost`                                           |
+| DB_PORT            | Oracle Database Port                                                    | Yes      | -             | `1521`                                                |
+| DB_PDB             | Oracle Pluggable Database name                                          | Yes      | -             | `customerflowpdb`                                     |
+| DB_USERNAME        | Oracle Database Username                                                | Yes      | -             | `CUSTOMERFLOW_DEV`                                    |
+| DB_PASSWORD        | Oracle Database Password                                                | Yes      | -             | `changeme`                                            |
+| JWT_SECRET_KEY     | JWT Secret Key. Generate using `JwtSecretKeyMakerTest` class            | Yes      | -             | `B9KcRasDYfFpDKYavK70qUYukxKGJXLfTXaGrQuoGdc`         |
+| JWT_EXPIRATION     | JWT expiration in milliseconds.                                         | Yes      | -             | `86400000`                                            |
+| JPA_DDL_AUTO       | Controls how Hibernate handles database schema generation and updates.  | No | `none`        | `none`, `update`, `create`, `create-drop`, `validate` | 
+| JPA_SHOW_SQL       | Enable Hibernate to display generated SQL queries in the console.       | No | `false`       | `true`, `false`                                       | 
+| JPA_FORMAT_SQL     | Formats SQL queries in logs for better readability.                     | No | `false` | `true`, `false`                                       |
+| API_DOCS_ENABLED   | Enables API documentation generation.                                   | No | `false` | `true`, `false`                                       |
+| SWAGGER_UI_ENABLED | Enables Swagger UI for API visualization.                               | No | `false` | `true`, `false`                                       | 
+| INITIAL_ADMIN_EMAIL | Email for the initial admin user, created when no users exist at startup. | No | - | `admin@admin.com`                                     | 
+| INITIAL_ADMIN_PASSWORD | Password for the initial admin user, created when no users exist at startup. | No | - | `changeme`                                            |
