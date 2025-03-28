@@ -5,7 +5,6 @@ import dev.luisespinoza.customerflow.role.RoleRepository;
 import dev.luisespinoza.customerflow.user.UserRepository;
 import dev.luisespinoza.customerflow.user.UserRequest;
 import dev.luisespinoza.customerflow.user.UserService;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

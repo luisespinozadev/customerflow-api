@@ -8,22 +8,23 @@ spring:
   application:
     name: customerflow-api
   datasource:
-    url: jdbc:oracle:thin:@${DB_HOST}:${DB_PORT}/${DB_PDB}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:oracle:thin:@${DB_HOST:localhost}:${DB_PORT:1521}/${DB_PDB:customerflowpdb}
+    username: ${DB_USERNAME:CUSTOMERFLOW_DEV}
+    password: ${DB_PASSWORD:changeme}
     driver-class-name: oracle.jdbc.OracleDriver
   jpa:
     hibernate:
-      ddl-auto: ${JPA_DDL_AUTO:none}
+      ddl-auto: ${JPA_DDL_AUTO:update}
     show-sql: ${JPA_SHOW_SQL:false}
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
         format_sql: ${JPA_FORMAT_SQL:false}
 application:
   security:
     jwt:
-      secret-key: ${JWT_SECRET_KEY}
-      expiration: ${JWT_EXPIRATION}
+      secret-key: ${JWT_SECRET_KEY:B9KcRasDYfFpDKYavK70qUYukxKGJXLfTXaGrQuoGdc}
+      expiration: ${JWT_EXPIRATION:86400000}
 
 springdoc:
   api-docs:
@@ -33,5 +34,5 @@ springdoc:
 
 initial-setup:
   admin:
-    email: ${INITIAL_ADMIN_EMAIL}
-    password: ${INITIAL_ADMIN_PASSWORD}
+    email: ${INITIAL_ADMIN_EMAIL:admin@example.com}
+    password: ${INITIAL_ADMIN_PASSWORD:changeme}

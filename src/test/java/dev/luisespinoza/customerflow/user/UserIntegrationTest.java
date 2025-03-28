@@ -1,12 +1,9 @@
-package dev.luisespinoza.customerflow.company;
+package dev.luisespinoza.customerflow.user;
 
 import dev.luisespinoza.customerflow.auth.AuthenticationRequest;
 import dev.luisespinoza.customerflow.auth.AuthenticationResponse;
 import dev.luisespinoza.customerflow.auth.AuthenticationService;
-import dev.luisespinoza.customerflow.exception.ExceptionResponse;
-import dev.luisespinoza.customerflow.user.UserRepository;
-import dev.luisespinoza.customerflow.user.UserRequest;
-import dev.luisespinoza.customerflow.user.UserService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,37 +16,33 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class CompanyIntegrationTest {
+public class UserIntegrationTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private CompanyRepository companyRepository;
+    private AuthenticationService authenticationService;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private UserRepository userRepository;
+
     @Autowired
-    UserService userService;
-    @Autowired
-    UserRepository userRepository;
+    private UserService userService;
 
     private HttpHeaders headers;
 
     @BeforeEach
     public void setUp() throws Exception {
-        companyRepository.deleteAll();
+        // User
         userRepository.deleteAll();
-
         UserRequest adminUser = new UserRequest(
                 "AdminName",
                 "AdminLastname",
@@ -59,6 +52,7 @@ public class CompanyIntegrationTest {
         );
         userService.create(adminUser);
 
+        // Auth
         AuthenticationRequest authRequest = AuthenticationRequest.builder()
                 .email(adminUser.getEmail())
                 .password(adminUser.getPassword()).build();
@@ -68,43 +62,38 @@ public class CompanyIntegrationTest {
     }
 
     @Test
-    public void givenCompanyRequest_whenCreateCompany_thenCompanyResponseIsReturned() throws Exception {
-        CompanyRequest companyRequest = new CompanyRequest();
-        companyRequest.setName("The Company");
+    public void givenGetRequest_whenGetString_thenStringIsReturned() {
 
-        HttpEntity<CompanyRequest> requestEntity = new HttpEntity<>(companyRequest, headers);
+        HttpEntity<String> requestEntity = new HttpEntity<>(null,headers);
 
-        ResponseEntity<CompanyResponse> response = testRestTemplate.exchange(
-                "/api/v1/company",
-                HttpMethod.POST,
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/api/v1/users",
+                HttpMethod.GET,
                 requestEntity,
-                CompanyResponse.class );
+                String.class
+        );
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals("The Company", response.getBody().getName());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
-    public void givenMissingNameCompanyRequest_whenCreateCompany_thenBadRequestExceptionIsReturned() throws Exception {
-        CompanyRequest companyRequest = new CompanyRequest();
-        HttpEntity<CompanyRequest> requestEntity = new HttpEntity<>(companyRequest, headers);
+    public void givenUserRequest_whenCreateUser_thenUserResponseIsReturned() throws Exception {
+        UserRequest newAdminUserRequest = new UserRequest(
+                "FirstnameTest",
+                "LastnameTest",
+                "test@test.com",
+                "test1234",
+                List.of("ADMIN")
+        );
+        HttpEntity<UserRequest> requestEntity = new HttpEntity<>(newAdminUserRequest, headers);
 
-        ResponseEntity<ExceptionResponse> response = testRestTemplate.exchange(
-                "/api/v1/company",
+        ResponseEntity<UserResponse> response = testRestTemplate.exchange(
+                "/api/v1/users",
                 HttpMethod.POST,
                 requestEntity,
-                ExceptionResponse.class
+                UserResponse.class
         );
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNotNull(response.getBody());
-
-        Set<String> validationErrors = response.getBody().getValidationErrors();
-        assertNotNull(validationErrors);
-        assertFalse(validationErrors.isEmpty());
-
-        assertTrue(validationErrors.contains("The company name cannot be empty"));
+        System.out.println("Response body: " + response.getBody());
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
-
 }

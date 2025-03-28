@@ -1,10 +1,11 @@
 package dev.luisespinoza.customerflow.user;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponse {
     private Long id;
     private String firstname;
