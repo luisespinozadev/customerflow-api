@@ -10,8 +10,9 @@ public class JwtSecretKeyMakerTest {
     public void generateSecretKey() {
         byte[] key = new byte[32]; // 256 bits
         new SecureRandom().nextBytes(key);
-        String base64Key = Base64.getUrlEncoder().withoutPadding().encodeToString(key);
 
-        System.out.println("Generated Secret Key: " + base64Key);
+        String base64Key = Base64.getEncoder().withoutPadding().encodeToString(key);
+
+        System.out.println("JWT_SECRET_KEY=" + base64Key);
     }
 }
