@@ -63,7 +63,7 @@ public class UserServiceTest {
                 .enabled(true)
                 .roles(List.of(adminRole))
                 .build();
-        expectedAdminUserResponse = new UserResponse(savedAdminUser.getId(), savedAdminUser.getFirstname(), savedAdminUser.getLastname(), savedAdminUser.getEmail());
+        expectedAdminUserResponse = new UserResponse(savedAdminUser.getId(), savedAdminUser.getFirstname(), savedAdminUser.getLastname(), savedAdminUser.getEmail(), List.of(savedAdminUser.getRoles().toString()));
 
         // Regular user
         userRole = new Role(1L, "USER", null, LocalDateTime.now(), LocalDateTime.now());
@@ -78,7 +78,7 @@ public class UserServiceTest {
                 .enabled(true)
                 .roles(List.of(userRole))
                 .build();
-        expectedUserResponse = new UserResponse(savedUser.getId(), savedUser.getFirstname(), savedUser.getLastname(), savedUser.getEmail());
+        expectedUserResponse = new UserResponse(savedUser.getId(), savedUser.getFirstname(), savedUser.getLastname(), savedUser.getEmail(), List.of(savedUser.getRoles().toString()));
 
         // List
         userList = List.of(savedAdminUser, savedUser);
@@ -143,7 +143,7 @@ public class UserServiceTest {
     @Test
     public void givenUserRequest_whenUpdateUser_thenUserResponseIsReturned() {
         Long userId = savedAdminUser.getId();
-        UserRequest updateRequest = new UserRequest(
+        UserPatchRequest updateRequest = new UserPatchRequest(
                 "UpdatedName", "UpdatedLastName", "updated@mail.com", rawPassword, List.of(userRole.getName())
         );
         User updatedUser = User.builder()
@@ -160,7 +160,8 @@ public class UserServiceTest {
                 userId,
                 updateRequest.getFirstname(),
                 updateRequest.getLastname(),
-                updateRequest.getEmail()
+                updateRequest.getEmail(),
+                updateRequest.getRoles()
         );
         // Mocks
         given(userRepository.findById(userId)).willReturn(Optional.of(savedAdminUser));

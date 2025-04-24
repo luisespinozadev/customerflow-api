@@ -9,7 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,13 +46,13 @@ public class UserService {
                 .build();
 
         user = userRepository.save(user);
-        return mapper.map(user, UserResponse.class);
+        return mapToResponse(user);
     }
 
     public List<UserResponse> findAll() {
         List<UserResponse> users = userRepository.findAll()
                 .stream()
-                .map(user -> mapper.map(user, UserResponse.class))
+                .map(this::mapToResponse)
                 .toList();
         return users;
     }
@@ -57,10 +60,10 @@ public class UserService {
     public UserResponse findById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found"));
-        return mapper.map(user, UserResponse.class);
+        return mapToResponse(user);
     }
 
-    public UserResponse update(Long id, UserRequest userRequest) {
+    public UserResponse update(Long id, UserPatchRequest userRequest) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found"));
 
@@ -87,8 +90,24 @@ public class UserService {
         }
 
         user = userRepository.save(user);
-        return mapper.map(user, UserResponse.class);
+        return mapToResponse(user);
 
+    }
+
+    private UserResponse mapToResponse(User user) {
+        List<String> roleNames = Optional.ofNullable(user.getRoles())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(Role::getName)
+                .toList();
+
+        return new UserResponse(
+                user.getId(),
+                user.getFirstname(),
+                user.getLastname(),
+                user.getEmail(),
+                roleNames
+        );
     }
 
 }

@@ -18,7 +18,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,7 +54,8 @@ public class UserControllerTest {
                 1L,
                 adminUserRequest.getFirstname(),
                 adminUserRequest.getLastname(),
-                adminUserRequest.getEmail()
+                adminUserRequest.getEmail(),
+                adminUserRequest.getRoles()
         );
 
         // USER
@@ -70,7 +70,8 @@ public class UserControllerTest {
                 2L,
                 userRequest.getFirstname(),
                 userRequest.getLastname(),
-                userRequest.getEmail()
+                userRequest.getEmail(),
+                userRequest.getRoles()
         );
 
         userResponseList = List.of(adminUserResponse, userResponse);
@@ -79,17 +80,7 @@ public class UserControllerTest {
 
     @Test
     public void givenUserRequest_whenCreateUser_thenUserResponseIsReturned() throws Exception {
-        UserRequest userRequest = new UserRequest(
-                "Firstname",
-                "Lastname",
-                "demo@demo.com",
-                "changeme",
-                List.of("ADMIN"));
-        UserResponse userResponse = new UserResponse(
-                2L,
-                "Firstname",
-                "Lastname",
-                "demo@demo.com");
+
         given(userService.create(any(UserRequest.class)))
                 .willReturn(userResponse);
 
@@ -100,11 +91,13 @@ public class UserControllerTest {
         );
 
         response.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.firstname").value(userRequest.getFirstname()));
+                .andExpect(jsonPath("$.firstname").value(userRequest.getFirstname()))
+                .andExpect(jsonPath("$.email").value(userRequest.getEmail()))
+                .andExpect(jsonPath("$.roles[0]").value(userRequest.getRoles().get(0)));
     }
 
     @Test
-    public void givenInvalidUserRequest_whenCreateUser_thenBadRequestExceptionIsReturned() throws Exception {
+    public void givenEmptyEmailUserRequest_whenCreateUser_thenBadRequestExceptionIsReturned() throws Exception {
         UserRequest userRequest = new UserRequest(
                 "Firstname",
                 "Lastname",
@@ -135,8 +128,10 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[0].id").value(adminUserResponse.getId()))
                 .andExpect(jsonPath("$[0].firstname").value(adminUserResponse.getFirstname()))
                 .andExpect(jsonPath("$[0].email").value(adminUserResponse.getEmail()))
+                .andExpect(jsonPath("$[0].roles[0]").value(adminUserResponse.getRoles().get(0)))
                 .andExpect(jsonPath("$[1].id").value(userResponse.getId()))
-                .andExpect(jsonPath("$[1].lastname").value(userResponse.getLastname()));
+                .andExpect(jsonPath("$[1].lastname").value(userResponse.getLastname()))
+                .andExpect(jsonPath("$[1].roles[0]").value(userResponse.getRoles().get(0)));
     }
 
     @Test
@@ -153,7 +148,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id").value(userResponse.getId()))
                 .andExpect(jsonPath("$.firstname").value(userResponse.getFirstname()))
                 .andExpect(jsonPath("$.lastname").value(userResponse.getLastname()))
-                .andExpect(jsonPath("$.email").value(userResponse.getEmail()));
+                .andExpect(jsonPath("$.email").value(userResponse.getEmail()))
+                .andExpect(jsonPath("$.roles[0]").value(userResponse.getRoles().get(0)));
     }
 
     @Test
@@ -170,10 +166,11 @@ public class UserControllerTest {
                 userId,
                 updateUserRequest.getFirstname(),
                 updateUserRequest.getLastname(),
-                updateUserRequest.getEmail()
+                updateUserRequest.getEmail(),
+                updateUserRequest.getRoles()
         );
 
-        given(userService.update(eq(userId), any(UserRequest.class))).willReturn(expectedUserResponse);
+        given(userService.update(eq(userId), any(UserPatchRequest.class))).willReturn(expectedUserResponse);
 
         ResultActions response = mockMvc.perform(
                 patch("/api/v1/users/" + userId)
@@ -186,7 +183,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id").value(expectedUserResponse.getId()))
                 .andExpect(jsonPath("$.firstname").value(expectedUserResponse.getFirstname()))
                 .andExpect(jsonPath("$.lastname").value(expectedUserResponse.getLastname()))
-                .andExpect(jsonPath("$.email").value(expectedUserResponse.getEmail()));
+                .andExpect(jsonPath("$.email").value(expectedUserResponse.getEmail()))
+                .andExpect(jsonPath("$.roles[0]").value(expectedUserResponse.getRoles().get(0)));
 
     }
 
