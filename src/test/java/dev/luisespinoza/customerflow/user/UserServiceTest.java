@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -19,7 +18,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -28,8 +28,6 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private RoleRepository roleRepository;
-    @Mock
-    private ModelMapper mapper;
     @Mock
     private PasswordEncoder passwordEncoder;
     @InjectMocks
@@ -90,7 +88,6 @@ public class UserServiceTest {
         given(roleRepository.findByName(adminRole.getName())).willReturn(Optional.of(adminRole));
         given(passwordEncoder.encode(any(String.class))).willReturn(encodedPassword);
         given(userRepository.save(any(User.class))).willReturn(savedAdminUser);
-        given(mapper.map(any(User.class), eq(UserResponse.class))).willReturn(expectedAdminUserResponse);
 
         UserResponse actualUserResponse = userService.create(adminUserRequest);
 
@@ -102,8 +99,6 @@ public class UserServiceTest {
     @Test
     public void givenExistingUsers_whenFindAllUsers_thenListOfUsersAreReturned() {
         given(userRepository.findAll()).willReturn(userList);
-        given(mapper.map(savedAdminUser, UserResponse.class)).willReturn(expectedAdminUserResponse);
-        given(mapper.map(savedUser, UserResponse.class)).willReturn(expectedUserResponse);
 
         List<UserResponse> actualUserResponses = userService.findAll();
 
@@ -117,7 +112,6 @@ public class UserServiceTest {
     public void givenExistingUser_whenFindById_thenUserResponseIsReturned() throws Exception {
         Long userId = savedUser.getId();
         given(userRepository.findById(userId)).willReturn(Optional.of(savedUser));
-        given(mapper.map(savedUser, UserResponse.class)).willReturn(expectedUserResponse);
 
         UserResponse actualUserResponse = userService.findById(userId);
 
@@ -168,7 +162,6 @@ public class UserServiceTest {
         given(passwordEncoder.encode(updateRequest.getPassword())).willReturn(encodedPassword);
         given(roleRepository.findByName(userRole.getName())).willReturn(Optional.of(userRole));
         given(userRepository.save(any(User.class))).willReturn(updatedUser);
-        given(mapper.map(updatedUser, UserResponse.class)).willReturn(expectedResponse);
 
         UserResponse actualResponse = userService.update(userId, updateRequest);
 
@@ -177,6 +170,26 @@ public class UserServiceTest {
         assertEquals(expectedResponse.getFirstname(), actualResponse.getFirstname());
         assertEquals(expectedResponse.getLastname(), actualResponse.getLastname());
         assertEquals(expectedResponse.getEmail(), actualResponse.getEmail());
+    }
+
+    @Test
+    public void givenExistingUser_whenDeleteUser_thenNoContentIsReturned() {
+        Long userId = savedUser.getId();
+        given(userRepository.findById(userId)).willReturn(Optional.of(savedUser));
+
+        userService.delete(userId);
+
+        verify(userRepository).delete(savedUser);
+    }
+
+    @Test
+    public void givenNonExistingUser_whenDeleteUser_thenNotFoundExceptionIsThrown() {
+        Long userId = savedUser.getId();
+        given(userRepository.findById(userId)).willReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> userService.delete(userId));
+
+        verify(userRepository, never()).delete(any());
     }
 
 

@@ -2,6 +2,7 @@ package dev.luisespinoza.customerflow.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.luisespinoza.customerflow.security.JwtService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,10 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -140,7 +144,7 @@ public class UserControllerTest {
         given(userService.findById(userId)).willReturn(userResponse);
 
         ResultActions response = mockMvc.perform(
-                get("/api/v1/users/" + userId)
+                get("/api/v1/users/{id}", userId)
                         .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -173,7 +177,7 @@ public class UserControllerTest {
         given(userService.update(eq(userId), any(UserPatchRequest.class))).willReturn(expectedUserResponse);
 
         ResultActions response = mockMvc.perform(
-                patch("/api/v1/users/" + userId)
+                patch("/api/v1/users/{id}", userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateUserRequest))
         );
@@ -186,6 +190,34 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email").value(expectedUserResponse.getEmail()))
                 .andExpect(jsonPath("$.roles[0]").value(expectedUserResponse.getRoles().get(0)));
 
+    }
+
+    @Test
+    public void givenExistingUser_whenDeleteUser_thenNoContentIsReturned() throws Exception {
+        Long userId = 1L;
+
+        ResultActions response = mockMvc.perform(
+                delete("/api/v1/users/{id}", userId)
+        );
+
+        response.andExpect(status().isNoContent());
+
+        verify(userService).delete(userId);
+    }
+
+    @Test
+    public void givenNonExistingUser_whenDeleteUser_thenNotFoundExceptionIsThrown() throws Exception {
+        Long userId = 2L;
+        String errorMessage = "User with ID " + userId + " not found";
+
+        doThrow(new EntityNotFoundException(errorMessage)).when(userService).delete(userId);
+
+        ResultActions response = mockMvc.perform(
+                delete("/api/v1/users/{id}", userId)
+        );
+
+        response.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value(errorMessage));
     }
 
 }

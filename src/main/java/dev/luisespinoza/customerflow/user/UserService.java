@@ -4,7 +4,6 @@ import dev.luisespinoza.customerflow.role.Role;
 import dev.luisespinoza.customerflow.role.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +19,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ModelMapper mapper;
 
     public UserResponse create(
             UserRequest request
@@ -92,6 +89,13 @@ public class UserService {
         user = userRepository.save(user);
         return mapToResponse(user);
 
+    }
+
+    public void delete(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found"));
+
+        userRepository.delete(user);
     }
 
     private UserResponse mapToResponse(User user) {

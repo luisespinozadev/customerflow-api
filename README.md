@@ -143,6 +143,7 @@ Before running the application, follow these steps:
     ```zsh
     mvn spring-boot:run
     ```
+6. Open in browser the following URL: `http://localhost:8080/swagger-ui/index.html`
 
 ### Testing Environment
 
