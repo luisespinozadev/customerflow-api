@@ -20,7 +20,8 @@ services:
       - "${APP_PORT:-8080}:8080"
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      JAVA_OPTS: "-Xms512m -Xmx1024m"
+      #JAVA_OPTS: "-Xms512m -Xmx1024m"
+      JAVA_OPTS: "-Xms64m -Xmx256m"
       API_URL: "${API_URL}"
       DB_HOST: oracle-db
       DB_PORT: "${DB_PORT}"

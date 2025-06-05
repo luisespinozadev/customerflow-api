@@ -12,7 +12,7 @@ RUN mvn clean package -DskipTests
 
 # Stage 2
 
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:17-jre-alpine
 
 ENV SPRING_PROFILES_ACTIVE=prod \
     JAVA_OPTS=""
@@ -22,4 +22,6 @@ COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
