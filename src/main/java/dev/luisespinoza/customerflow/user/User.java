@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,6 +31,13 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "cf_user")
 @EntityListeners(AuditingEntityListener.class)
+@SQLDelete(sql = "UPDATE cf_user SET deleted_date = CURRENT_TIMESTAMP WHERE id = ?")
+//@Where(clause = "deleted_date is null")
+@SQLRestriction("deleted_date is null")
+/* @Where is deprecated, use @SQLRestriction instead. References:
+ https://docs.jboss.org/hibernate/stable/orm/javadocs/org/hibernate/annotations/Where.html
+ https://stackoverflow.com/questions/77178963/is-there-a-replacement-for-the-in-6-3-deprecated-where-and-loader
+*/
 public class User implements UserDetails, Principal {
 
     @Id
@@ -50,6 +60,8 @@ public class User implements UserDetails, Principal {
     @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime lastModifiedDate;
+
+    private LocalDateTime deletedDate;
 
     @Override
     public String getName() {
