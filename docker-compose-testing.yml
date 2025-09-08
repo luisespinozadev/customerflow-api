@@ -9,6 +9,7 @@ services:
       ORACLE_PWD: "${DB_PASSWORD:-changeme}"
       ORACLE_CHARACTERSET: "${DB_CHARACTERSET:-AL32UTF8}"
       ORACLE_PDB: "${DB_PDB:-customerflowpdb}"
+    restart: always
     volumes:
       - oracle-data:/opt/oracle/oradata
       - ./setup-sql:/opt/oracle/scripts/startup
@@ -30,13 +31,13 @@ services:
       DB_PASSWORD: "${DB_PASSWORD}"
       JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
       JWT_EXPIRATION: "${JWT_EXPIRATION}"
-      JPA_DDL_AUTO: "${JPA_DDL_AUTO:-}"
-      JPA_SHOW_SQL: "${JPA_SHOW_SQL:-}"
-      JPA_FORMAT_SQL: "${JPA_FORMAT_SQL:-}"
-      API_DOCS_ENABLED: "${API_DOCS_ENABLED:-}"
-      SWAGGER_UI_ENABLED: "${SWAGGER_UI_ENABLED:-}"
-      INITIAL_ADMIN_EMAIL: "${INITIAL_ADMIN_EMAIL:-}"
-      INITIAL_ADMIN_PASSWORD: "${INITIAL_ADMIN_PASSWORD:-}"
+      JPA_DDL_AUTO: "${JPA_DDL_AUTO:-create-drop}"
+      JPA_SHOW_SQL: "${JPA_SHOW_SQL:-false}"
+      JPA_FORMAT_SQL: "${JPA_FORMAT_SQL:-false}"
+      API_DOCS_ENABLED: "${API_DOCS_ENABLED:-false}"
+      SWAGGER_UI_ENABLED: "${SWAGGER_UI_ENABLED:-false}"
+      INITIAL_ADMIN_EMAIL: "${INITIAL_ADMIN_EMAIL}"
+      INITIAL_ADMIN_PASSWORD: "${INITIAL_ADMIN_PASSWORD}"
     restart: always
     depends_on:
       oracle-db:

@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/company")
 @RequiredArgsConstructor
@@ -17,7 +19,12 @@ public class CompanyController {
     public ResponseEntity<CompanyResponse> create (
             @Validated @RequestBody CompanyRequest request
     ) {
-        CompanyResponse response = service.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                            .body(service.create(request));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CompanyResponse>> findAll () {
+        return ResponseEntity.ok(service.findAll());
     }
 }

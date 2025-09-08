@@ -35,7 +35,7 @@ public class AppInitializer {
 
     @Bean
     @Order(1)
-    public CommandLineRunner RoleInitializer () {
+    public CommandLineRunner roleInitializer () {
         return args -> {
             if (roleRepository.findByName("ADMIN").isEmpty()) {
                 roleRepository.save(Role.builder().name("ADMIN").build());
@@ -50,7 +50,7 @@ public class AppInitializer {
 
     @Bean
     @Order(2)
-    public CommandLineRunner AdminUserInitializer () {
+    public CommandLineRunner adminUserInitializer () {
         return args -> {
 
             if (userRepository.existsByIdIsNotNull()) {
