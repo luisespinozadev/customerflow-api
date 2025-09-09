@@ -7,8 +7,8 @@ DB_PORT=1521
 DB_PDB=customerflowpdb
 DB_USERNAME=CUSTOMERFLOW_DEV
 DB_PASSWORD=changeme
-ARCH=amd
-PLATFORM=linux/amd64
+ARCH=amd64 #arm64
+PLATFORM=linux/amd64 #linux/arm64
 
 # Security
 JWT_SECRET_KEY=
